@@ -147,7 +147,7 @@ class _WeatherPageState extends State<WeatherPage> {
               child: Column(
                 children: [
                   TextField(
-                    //autofocus: citiesList.isNotEmpty,
+                    autofocus: citiesList.isNotEmpty,
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
                         borderRadius:
