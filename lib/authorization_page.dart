@@ -104,7 +104,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                       Padding(
                         padding: const EdgeInsets.only(top: 20.0),
                         child: MyButton(
-                          text: 'Зарегистрироваться',
+                          text: 'Войти',
                           textColor: Colors.black,
                           fillColor: Colors.green,
                           borderColor: Colors.green,
@@ -156,18 +156,18 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
         date.isEmpty ? emptyTextFieldList.add(_dateOfBirthdayController) : null;
         uid.isEmpty ? emptyTextFieldList.add(_uidController) : null;
       } else if (!ValidationProvider().isLoginValid(login)) {
-        login.isEmpty ? emptyTextFieldList.add(_loginController) : null;
+        emptyTextFieldList.add(_loginController);
         showScaffoldMessenge(
             context, 'Логин не должен содержать цифр. Минимум 5 символов');
       } else if (!ValidationProvider().isPasswordValid(password)) {
-        password.isEmpty ? emptyTextFieldList.add(_passwordController) : null;
+        emptyTextFieldList.add(_passwordController);
         showScaffoldMessenge(context,
             'Пароль должен содержать строчные и прописные буквы, цифры, спецсимволы. Минимум 8 символов');
       } else if (!ValidationProvider().isUIDValid(uid)) {
-        uid.isEmpty ? emptyTextFieldList.add(_uidController) : null;
+        emptyTextFieldList.add(_uidController);
         showScaffoldMessenge(context, 'UID должен иметь 10-значное значение');
       } else {
-        showScaffoldMessenge(context, 'Удачная регистрация!');
+        showScaffoldMessenge(context, 'Удачная авторизация!');
         _dateOfBirthdayController.text = '';
         _loginController.text = '';
         _passwordController.text = '';

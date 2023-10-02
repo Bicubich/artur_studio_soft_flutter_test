@@ -62,7 +62,7 @@ class _WeatherPageState extends State<WeatherPage> {
           AsyncSnapshot<List<String>> snapshot,
         ) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return waitWidget();
           } else if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
               return const Text('Error');
@@ -91,7 +91,7 @@ class _WeatherPageState extends State<WeatherPage> {
           AsyncSnapshot<Weather?> snapshot,
         ) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return waitWidget();
           } else if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
               return const Text('Error');
@@ -109,6 +109,27 @@ class _WeatherPageState extends State<WeatherPage> {
     } else {
       return _buildContent();
     }
+  }
+
+  Widget waitWidget() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(
+            color: Colors.black,
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Text(
+            'Загрузка погоды...',
+            style: TextStyle(fontSize: 25),
+          )
+        ],
+      ),
+    );
   }
 
   Scaffold _buildContent() {
@@ -136,9 +157,7 @@ class _WeatherPageState extends State<WeatherPage> {
                         borderSide: BorderSide(
                             color: Colors.grey.withOpacity(0.5), width: 2),
                       ),
-                      labelText: 'Город',
                       hintText: 'Введите город...',
-                      labelStyle: TextStyle(color: Colors.grey[500]),
                       filled: true,
                       fillColor: Colors.grey[200],
                     ),
@@ -158,7 +177,10 @@ class _WeatherPageState extends State<WeatherPage> {
                         itemCount: filteredCitiesList.length,
                         itemBuilder: (context, index) {
                           return ListTile(
-                            title: Text(filteredCitiesList[index]),
+                            title: Text(
+                              filteredCitiesList[index],
+                              style: const TextStyle(color: Colors.white),
+                            ),
                             onTap: () {
                               setState(() {
                                 _textEditingController.text =
@@ -166,6 +188,7 @@ class _WeatherPageState extends State<WeatherPage> {
                                 currentCity =
                                     filteredCitiesList[index].toString();
                                 filteredCitiesList = [];
+                                _textEditingController.text = "";
                               });
                             },
                           );
@@ -182,11 +205,11 @@ class _WeatherPageState extends State<WeatherPage> {
                 children: [
                   Text(
                     currentCity,
-                    style: const TextStyle(fontSize: 35),
+                    style: const TextStyle(fontSize: 35, color: Colors.white),
                   ),
                   Text(
                     '${cityData!.temp.toString()} °C',
-                    style: const TextStyle(fontSize: 35),
+                    style: const TextStyle(fontSize: 35, color: Colors.white),
                   ),
                 ],
               ),
