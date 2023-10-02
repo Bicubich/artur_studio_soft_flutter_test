@@ -1,125 +1,173 @@
+import 'dart:convert';
+
+import 'package:artur_studio_soft_flutter_test/models/weather.dart';
+import 'package:artur_studio_soft_flutter_test/providers/network_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MaterialApp(
+    home: WeatherPage(),
+  ));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class WeatherPage extends StatefulWidget {
+  const WeatherPage({super.key});
 
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a blue toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+  State<WeatherPage> createState() => _WeatherPageState();
+}
+
+class _WeatherPageState extends State<WeatherPage> {
+  late TextEditingController _textEditingController;
+  List<String> citiesList = [];
+  List<String> filteredCitiesList = [];
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
   }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
+  void initState() {
+    _textEditingController = TextEditingController();
+    super.initState();
+  }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  Future<List<String>> loadJsonCities() async {
+    String jsonString = await rootBundle.loadString('assets/jsons/cities.json');
 
-  void _incrementCounter() {
+    List<dynamic> jsonData = json.decode(jsonString);
+
+    List<String> namesList =
+        jsonData.map((item) => item['name'].toString()).toList();
+
+    return namesList;
+  }
+
+  void filterSuggestionsCity(String query) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      filteredCitiesList = citiesList
+          .where((suggestion) =>
+              suggestion.toLowerCase().contains(query.toLowerCase()))
+          .toList();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    if (citiesList.isEmpty) {
+      return FutureBuilder<List<String>>(
+        future: loadJsonCities(),
+        builder: (
+          BuildContext context,
+          AsyncSnapshot<List<String>> snapshot,
+        ) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasError) {
+              return const Text('Error');
+            } else if (snapshot.hasData) {
+              citiesList = snapshot.data!;
+              return _buildContent();
+            } else {
+              return const Text('Empty data');
+            }
+          } else {
+            return Text('State: ${snapshot.connectionState}');
+          }
+        },
+      );
+    } else {
+      return _buildContent();
+    }
+  }
+
+  Widget foo() {
+    return FutureBuilder<Weather?>(
+      future: NetworkProvider().fetchWeatherData('Moscow'),
+      builder: (
+        BuildContext context,
+        AsyncSnapshot<Weather?> snapshot,
+      ) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            return const Text('Error');
+          } else if (snapshot.hasData) {
+            return _buildContent(snapshot.data);
+          } else {
+            return const Text('Empty data');
+          }
+        } else {
+          return Text('State: ${snapshot.connectionState}');
+        }
+      },
+    );
+  }
+
+  Scaffold _buildContent(Weather? weatherData) {
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: Padding(
+        padding: const EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+          children: [
+            TextField(
+              autofocus: citiesList.isNotEmpty,
+              decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                  borderSide:
+                      BorderSide(color: Colors.grey.withOpacity(0.5), width: 2),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                  borderSide:
+                      BorderSide(color: Colors.grey.withOpacity(0.5), width: 2),
+                ),
+                labelText: 'Город',
+                hintText: 'Введите город...',
+                labelStyle: TextStyle(color: Colors.grey[500]),
+                filled: true,
+                fillColor: Colors.grey[200],
+              ),
+              controller: _textEditingController,
+              onChanged: (query) {
+                if (query.length >= 2) {
+                  filterSuggestionsCity(query);
+                } else {
+                  setState(() {
+                    filteredCitiesList = [];
+                  });
+                }
+              },
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            Visibility(
+              visible: filteredCitiesList.isNotEmpty,
+              child: Expanded(
+                child: ListView.builder(
+                  itemCount: filteredCitiesList.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(filteredCitiesList[index]),
+                      onTap: () {
+                        setState(() {
+                          _textEditingController.text =
+                              filteredCitiesList[index].toString();
+                          filteredCitiesList = [];
+                        });
+                      },
+                    );
+                  },
+                ),
+              ),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
