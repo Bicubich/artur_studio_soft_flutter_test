@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'calculator_page.dart';
+import 'authorization_page.dart';
 
 void main() {
-  runApp(const MaterialApp(
-    home: CalculatorPage(),
+  runApp(MaterialApp(
+    theme: ThemeData(scaffoldBackgroundColor: Colors.black),
+    home: AuthorizationPage(),
   ));
 }
