@@ -1,7 +1,7 @@
-// ignore: depend_on_referenced_packages
 import 'dart:convert';
 
 import 'package:artur_studio_soft_flutter_test/models/weather.dart';
+// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 
 class NetworkProvider {

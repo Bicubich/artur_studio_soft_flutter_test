@@ -86,7 +86,7 @@ class MyAuthorization extends StatelessWidget {
   const MyAuthorization({super.key});
   @override
   Widget build(BuildContext context) {
-    return AuthorizationPage();
+    return const AuthorizationPage();
   }
 }
 

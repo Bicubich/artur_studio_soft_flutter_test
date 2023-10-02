@@ -1,4 +1,3 @@
-import 'package:artur_studio_soft_flutter_test/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -7,7 +6,7 @@ import 'widgets/my_button.dart';
 import 'widgets/my_text_field.dart';
 
 class AuthorizationPage extends StatefulWidget {
-  AuthorizationPage({super.key});
+  const AuthorizationPage({super.key});
 
   @override
   State<AuthorizationPage> createState() => _AuthorizationPageState();
@@ -136,8 +135,6 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
       setState(() {
         _dateOfBirthdayController.text = formattedDate;
       });
-    } else {
-      print("Date is not selected");
     }
   }
 
