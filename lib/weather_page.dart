@@ -118,14 +118,14 @@ class _WeatherPageState extends State<WeatherPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           CircularProgressIndicator(
-            color: Colors.black,
+            color: Colors.white,
           ),
           SizedBox(
             height: 15,
           ),
           Text(
             'Загрузка погоды...',
-            style: TextStyle(fontSize: 25),
+            style: TextStyle(fontSize: 25, color: Colors.white),
           )
         ],
       ),

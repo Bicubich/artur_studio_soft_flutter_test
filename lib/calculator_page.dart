@@ -47,7 +47,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 result = '';
                 valueTwo = '';
                 operation = '';
-              } else {
+              } else if (operation == '/') {
                 result = (double.parse(result) / double.parse(valueTwo))
                     .toStringAsFixed(1)
                     .toString();
