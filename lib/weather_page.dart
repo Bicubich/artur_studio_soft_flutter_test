@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class _WeatherPageState extends State<WeatherPage> {
   late TextEditingController _textEditingController;
   List<String> citiesList = [];
   List<String> filteredCitiesList = [];
-  String currentCity = 'Санкт-Петербург';
+  String currentCity = 'Саратов';
   Weather? cityData;
 
   @override
@@ -29,6 +30,9 @@ class _WeatherPageState extends State<WeatherPage> {
   @override
   void initState() {
     _textEditingController = TextEditingController();
+    Timer.periodic(const Duration(seconds: 30), (timer) {
+      setState(() {});
+    });
     super.initState();
   }
 
@@ -143,7 +147,7 @@ class _WeatherPageState extends State<WeatherPage> {
               child: Column(
                 children: [
                   TextField(
-                    autofocus: citiesList.isNotEmpty,
+                    //autofocus: citiesList.isNotEmpty,
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
                         borderRadius:
