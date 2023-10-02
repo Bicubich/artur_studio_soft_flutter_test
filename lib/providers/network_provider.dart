@@ -10,10 +10,8 @@ class NetworkProvider {
 
     var response = await http.get(url, headers: {
       "Accept": "application/json",
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token',
-      "Authorization": "6LeSKTJUAAAAAJP9B8ZjYTQnW9zhWls2UyBcnq0W",
+      "Content-Type": "application/json",
+      "X-Api-Key": "Y2zQjUi2A/s1qHbdkd27bQ==W97TacgUPXzCD5a3",
     });
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);

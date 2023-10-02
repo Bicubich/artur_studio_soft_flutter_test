@@ -36,17 +36,17 @@ class Weather {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['cloud_pct'] = this.cloudPct;
-    data['temp'] = this.temp;
-    data['feels_like'] = this.feelsLike;
-    data['humidity'] = this.humidity;
-    data['min_temp'] = this.minTemp;
-    data['max_temp'] = this.maxTemp;
-    data['wind_speed'] = this.windSpeed;
-    data['wind_degrees'] = this.windDegrees;
-    data['sunrise'] = this.sunrise;
-    data['sunset'] = this.sunset;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['cloud_pct'] = cloudPct;
+    data['temp'] = temp;
+    data['feels_like'] = feelsLike;
+    data['humidity'] = humidity;
+    data['min_temp'] = minTemp;
+    data['max_temp'] = maxTemp;
+    data['wind_speed'] = windSpeed;
+    data['wind_degrees'] = windDegrees;
+    data['sunrise'] = sunrise;
+    data['sunset'] = sunset;
     return data;
   }
 }
